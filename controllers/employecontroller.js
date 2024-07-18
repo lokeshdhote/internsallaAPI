@@ -7,13 +7,16 @@ const EmployeeModel = require("../models/employemodel");
 const ErrorHandler = require("../utils/ErrorHandler");
 const imagekit = require("../utils/imagekit").initImagekit();
 const path = require("path");
+const { log } = require("console");
 
 exports.home = catchAsyncError(async (req, res) => {
   res.json({ message: 'Secure homepage' });
 })
 
 exports.employeesignup = catchAsyncError(async (req, res) => {
+        console.log(req.body.gender);
       const Employee = await new EmployeeModel(req.body).save();
+      console.log(Employee);
       sendtoken(Employee,200,res)
 //       res.status(200).json(Employee)
 })

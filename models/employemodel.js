@@ -22,7 +22,7 @@ const Employeeschema = new mongoose.Schema({
             url:"https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cGVyc29ufGVufDB8fDB8fHww"
         }
     },
-    organizationname:{
+    Organization:{
         required:[true,"organisationName is required"],
         type:String,
         min:[2,"Name must be have at least 2 characters"],
@@ -37,8 +37,7 @@ const Employeeschema = new mongoose.Schema({
     gender:{
         type:String,
         required: [true, "gender is required"],
-        enum: ["male", "female","others"],
-    },
+              },
     email:{
         unique: true,
         type: String,

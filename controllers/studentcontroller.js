@@ -3,20 +3,24 @@ const {sendtoken} = require("../utils/sendtoken")
 const {sendmail} = require("../utils/nodemailer")
 
 const StudentModel = require("../models/studentmodel");
+const jobModel = require("../models/jobmodel");
+const internshipModel = require("../models/internshipModel");
 const ErrorHandler = require("../utils/ErrorHandler");
-const { response } = require("express");
+const imagekit = require("../utils/imagekit").initImagekit();
+const path = require("path");
 
 exports.home = catchAsyncError(async (req, res) => {
   res.json({ message: 'Secure homepage' });
 })
 
 exports.studentsignup = catchAsyncError(async (req, res) => {
-      
+        console.log(req.body.gender);
+        const Student = await new StudentModel(req.body).save();
+        // const Student = await StudentModel.create(req.body).save();
+        sendtoken(Student,200,res)
+        res.status(200).json(Student)
+  })
 
-      const Student = await StudentModel.create(req.body).save();
-      sendtoken(Student,200,res)
-      res.status(200).json(Student)
-})
 
 exports.Currentstudent = catchAsyncError(async (req, res) => {
         const Student = await StudentModel.findById(req.id).exec()
@@ -33,7 +37,7 @@ exports.studentsignin = catchAsyncError(async (req,res,next) => {
         }
         const isMatch =  Student.comparepassword(req.body.password)
         if(!isMatch){
-                return next(new ErrorHandler("Wrong crendentials",404))
+           return next(new ErrorHandler("Wrong crendentials",404))
         }
         // console.log(req.body);
         sendtoken(Student,200,res)
@@ -80,6 +84,57 @@ exports.studentresetpassword = catchAsyncError(async (req, res,next) => {
         sendtoken(Student,200,res)
  })
 
+ exports.studentupdate= catchAsyncError(async (req, res,next) => {
+        const Student = await StudentModel.findByIdAndUpdate(
+          req.params.id,
+          req.body,
+          { new: true}
+        ).exec();
+        if(!Student){
+                return next(new ErrorHandler("User not found",500) )
+        }
+       
+        await Student.save()
+        res
+        .status(200)
+        .json(Student)
+ })
+ exports.studentavtar = catchAsyncError(async (req, res,next) => {
+        const Student = await StudentModel.findById(req.params.id).exec();
+        
+        console.log(req.files);
+        const file = req.files.avtar
+        const modifiedfilename = `resumebuilder-${Date.now()}${path.extname(file.name)}`
+        const {fileId,url} = await imagekit.upload({
+                file:file.data,
+                fileName:modifiedfilename,
+        })
+        if(Student.avtar.fileId !== ""){
+                await imagekit.deleteFile(Student.avtar.fileId)
+        }
+         Student.avtar = {fileId,url}
+         await Student.save()
+         res.status(200).json({success:true,message:"image uploaded Successfully"})
+ })
+ exports.studentapplyjobs = catchAsyncError(async (req, res,next) => {
+       const Student = await StudentModel.findById(req.id)
+       const job = await jobModel.findById(req.params.id)
+       Student.jobs.push(job._id)
+       job.students.push(Student._id)
+       await Student.save()
+       await job.save()
+       res.status(200).json({job,Student})
+})
+
+exports.studentapplyinternship = catchAsyncError(async (req, res,next) => {
+        const Student = await StudentModel.findById(req.id)
+        const internship = await  internshipModel.findById(req.params.id)
+        Student.internships.push(internship._id)
+        internship.students.push(Student._id)
+        await Student.save()
+        await internship.save()
+        res.status(200).json({internship,Student})
+})
 
 exports.studentsignout = catchAsyncError(async (req, res,next) => {
         res.clearCookie("token")

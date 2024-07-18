@@ -10,7 +10,9 @@ const cors = require('cors')
 
 
 const corsOptions = {
-    origin: 'http://localhost:5173', // Allow specific origin
+
+    // origin: 'http://localhost:5173', // Allow specific origin
+    origin: 'https://intersalla-react.vercel.app/', // Allow specific origin
     credentials: true // Allow credentials
   };
   
