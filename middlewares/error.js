@@ -1,4 +1,10 @@
 exports.generatedError = (err,req,res,next)=>{
+
+
+  if (res.headersSent) {
+    return next(err);
+  }
+
     const statusCode = res.statusCode || 500;
     console.log(err)
     if(

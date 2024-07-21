@@ -18,7 +18,7 @@ const {home,
 const {isAuthenticated} = require("../middlewares/auth")
 Router.get('/',isAuthenticated,home );
 
-Router.get('/student',isAuthenticated,Currentstudent );
+Router.post('/student',isAuthenticated,Currentstudent );
 //student signup
 Router.post("/student/signup",studentsignup)
 

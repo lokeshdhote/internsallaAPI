@@ -8,15 +8,10 @@ const session = require("express-session");
 const cookieparser = require("cookie-parser");
 const cors = require('cors')
 
+const allowedOrigins =['http://localhost:5173']
 
-const corsOptions = {
-
-    // origin: 'http://localhost:5173', // Allow specific origin
-    origin: 'https://intersalla-react.vercel.app/', // Allow specific origin
-    credentials: true // Allow credentials
-  };
   
-app.use(cors(corsOptions));
+app.use(cors({origin:'http://localhost:5173',credentials: true}));
   
 app.use(session({
     resave: true,

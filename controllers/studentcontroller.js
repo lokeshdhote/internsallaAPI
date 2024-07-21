@@ -8,30 +8,32 @@ const internshipModel = require("../models/internshipModel");
 const ErrorHandler = require("../utils/ErrorHandler");
 const imagekit = require("../utils/imagekit").initImagekit();
 const path = require("path");
+const { log } = require("console");
 
 exports.home = catchAsyncError(async (req, res) => {
   res.json({ message: 'Secure homepage' });
 })
 
 exports.studentsignup = catchAsyncError(async (req, res) => {
-        console.log(req.body.gender);
+       
         const Student = await new StudentModel(req.body).save();
         // const Student = await StudentModel.create(req.body).save();
         sendtoken(Student,200,res)
-        res.status(200).json(Student)
+        console.log(Student); 
+        //        res.status(201).json(Student)
   })
 
 
 exports.Currentstudent = catchAsyncError(async (req, res) => {
         const Student = await StudentModel.findById(req.id).exec()
+        console.log(Student+"currnt");
         res.status(200).json(Student)
   })
   
 
 exports.studentsignin = catchAsyncError(async (req,res,next) => {
-        const Student = await StudentModel.findOne({email:req.body.email})
-        .select("+password")
-        .exec()
+        console.log(req.body);
+        const Student = await StudentModel.findOne({email:req.body.email}).select("+password").exec()
         if(!Student){
           return next(new ErrorHandler("User with this email if not found",404) )
         }
@@ -40,9 +42,9 @@ exports.studentsignin = catchAsyncError(async (req,res,next) => {
            return next(new ErrorHandler("Wrong crendentials",404))
         }
         // console.log(req.body);
+        console.log(Student);
         sendtoken(Student,200,res)
 
-        // res.status(200).json(Student) 
 })
 
 exports.studentsendmail = catchAsyncError(async (req, res,next) => {
