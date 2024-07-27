@@ -8,7 +8,7 @@ const internshipModel = require("../models/internshipModel");
 const ErrorHandler = require("../utils/ErrorHandler");
 const imagekit = require("../utils/imagekit").initImagekit();
 const path = require("path");
-const { log } = require("console");
+const Student = require("../models/studentmodel");
 
 exports.home = catchAsyncError(async (req, res) => {
   res.json({ message: 'Secure homepage' });
@@ -18,15 +18,14 @@ exports.studentsignup = catchAsyncError(async (req, res) => {
        
         const Student = await new StudentModel(req.body).save();
         // const Student = await StudentModel.create(req.body).save();
-        sendtoken(Student,200,res)
-        console.log(Student); 
+                sendtoken(Student,200,res)
         //        res.status(201).json(Student)
   })
 
 
 exports.Currentstudent = catchAsyncError(async (req, res) => {
         const Student = await StudentModel.findById(req.id).exec()
-        console.log(Student+"currnt");
+        
         res.status(200).json(Student)
   })
   
@@ -42,7 +41,7 @@ exports.studentsignin = catchAsyncError(async (req,res,next) => {
            return next(new ErrorHandler("Wrong crendentials",404))
         }
         // console.log(req.body);
-        console.log(Student);
+        // console.log(Student);
         sendtoken(Student,200,res)
 
 })
@@ -77,6 +76,8 @@ exports.studentforgetlink = catchAsyncError(async (req, res,next) => {
  })
 
 exports.studentresetpassword = catchAsyncError(async (req, res,next) => {
+        
+        
         const Student = await StudentModel.findById(req.id).exec();
         if(!Student){
                 return next(new ErrorHandler("User not found",500) )
@@ -101,23 +102,49 @@ exports.studentresetpassword = catchAsyncError(async (req, res,next) => {
         .status(200)
         .json(Student)
  })
- exports.studentavtar = catchAsyncError(async (req, res,next) => {
-        const Student = await StudentModel.findById(req.params.id).exec();
-        
+ exports.studentavtar = catchAsyncError(async (req, res, next) => {
+        const student = await Student.findById(req.params.id).exec();
         console.log(req.files);
-        const file = req.files.avtar
-        const modifiedfilename = `resumebuilder-${Date.now()}${path.extname(file.name)}`
-        const {fileId,url} = await imagekit.upload({
-                file:file.data,
-                fileName:modifiedfilename,
-        })
-        if(Student.avtar.fileId !== ""){
-                await imagekit.deleteFile(Student.avtar.fileId)
+        console.log(req.files.name+"naam");
+
+        const file = req.files;
+        const modifiedFileName = `resumebuilder-${Date.now()}${path.extname(
+            file.name
+        )}`;
+    
+        if (student.avtar.fileId !== "") {
+            await imagekit.deleteFile(student.avtar.fileId);
         }
-         Student.avtar = {fileId,url}
-         await Student.save()
-         res.status(200).json({success:true,message:"image uploaded Successfully"})
- })
+    
+        const { fileId, url } = await imagekit.upload({
+            file: file.data,
+            fileName: modifiedFileName,
+        });
+        student.avtar = { fileId, url };
+        await student.save();
+        res.status(200).json({
+            success: true,
+            message: "Profile updated!",
+        });
+    });
+//  exports.studentavtar = catchAsyncError(async (req, res,next) => {
+//         const Student = await StudentModel.findById(req.params.id).exec();
+        
+//         console.log(req.files);
+//         const file = req.files
+//         console.log(file.name);
+//         const modifiedfilename = `resumebuilder-${Date.now()}${path.extname(file.name)}`
+//         const {fileId,url} = await imagekit.upload({
+//                 file:file.data,
+//                 fileName:modifiedfilename,
+//         })
+//         if(Student.avtar.fileId !== ""){
+//                 await imagekit.deleteFile(Student.avtar.fileId)
+//         }
+//          Student.avtar = {fileId,url}
+//          await Student.save()
+//          res.status(200).json({success:true,message:"image uploaded Successfully"})
+//  })
  exports.studentapplyjobs = catchAsyncError(async (req, res,next) => {
        const Student = await StudentModel.findById(req.id)
        const job = await jobModel.findById(req.params.id)
@@ -140,5 +167,6 @@ exports.studentapplyinternship = catchAsyncError(async (req, res,next) => {
 
 exports.studentsignout = catchAsyncError(async (req, res,next) => {
         res.clearCookie("token")
+        console.log(  res.clearCookie("token"));
         res.json({ message: 'SignOut successfully' });
 })

@@ -23,7 +23,7 @@ exports.employeesignup = catchAsyncError(async (req, res) => {
 
 exports.Currentemployee = catchAsyncError(async (req, res) => {
         const Employee = await EmployeeModel.findById(req.id).exec()
-        console.log(Employee);
+       
         res.status(200).json(Employee)
   })    
   

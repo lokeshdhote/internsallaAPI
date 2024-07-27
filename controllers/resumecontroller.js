@@ -13,6 +13,7 @@ exports.addeducation = catchAsyncError(async (req, res) => {
     const Student = await StudentModel.findById(req.id).exec()
     Student.resume.education = {...req.body,id:uuidv4()}
     await Student.save()
+    console.log( Student.resume);
     res.status(200).json({message:"Education Added Successfully"})
 })
 
@@ -40,6 +41,7 @@ exports.addinternship = catchAsyncError(async (req, res) => {
     res.status(200).json({message:"internship Added successfully"})
 })
 
+
 exports.editinternship = catchAsyncError(async (req, res) => {
     const Student = await StudentModel.findById(req.id).exec()
      let index = Student.resume.internships.findIndex((i) => i.id === req.params.id)
@@ -57,8 +59,9 @@ exports.deleteinternship = catchAsyncError(async (req, res) => {
 })
 
 exports. addresponsibilities = catchAsyncError(async (req, res) => {
+    
     const Student = await StudentModel.findById(req.id).exec()
-     Student.resume.responsibilites = {...req.body,id:uuidv4()}
+     Student.resume.responsibilities = {...req.body,id:uuidv4()}
     await Student.save()
     res.status(200).json({message:"responsibilites Added successfully"})
 })
@@ -66,7 +69,7 @@ exports. addresponsibilities = catchAsyncError(async (req, res) => {
 exports.editresponsibilities = catchAsyncError(async (req, res) => {
     const Student = await StudentModel.findById(req.id).exec()
      let index = Student.resume.responsibilities.findIndex((i) => i.id === req.params.id)
-     Student.resume.responsibilities[index] = {...Student.resume.responsibilites[index],...req.body}
+     Student.resume.responsibilities[index] = {...Student.resume.responsibilities[index],...req.body}
     await Student.save()
     res.status(200).json({message:"responsibilities Updated successfully"})
 })
@@ -176,6 +179,31 @@ exports.addskills = catchAsyncError(async (req, res) => {
      Student.resume.skills = {...req.body,id:uuidv4()}
     await Student.save()
     res.status(200).json({message:"skills Added successfully"})
+})
+
+
+exports.addlink = catchAsyncError(async (req, res) => {
+    const Student = await StudentModel.findById(req.id).exec()
+     Student.resume.link = {...req.body,id:uuidv4()}
+    await Student.save()
+    res.status(200).json({message:"link Added successfully"})
+})
+
+
+exports.editlink = catchAsyncError(async (req, res) => {
+    const Student = await StudentModel.findById(req.id).exec()
+     let index = Student.resume.link.findIndex((i) => i.id === req.params.id)
+     Student.resume.link[index] = {...Student.resume.link[index],...req.body}
+    await Student.save()
+    res.status(200).json({message:"link Updated successfully"})
+})
+
+exports.deldellink= catchAsyncError(async (req, res) => {
+    const Student = await StudentModel.findById(req.id).exec()
+    let Filteredlink =  Student.resume.link.filter((i)=>i.id !== req.params.id)
+    Student.resume.link = Filteredlink
+    await Student.save()
+    res.status(200).json({message:"link Deleted successfully"})
 })
 
 

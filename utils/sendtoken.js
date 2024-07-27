@@ -1,16 +1,16 @@
 exports.sendtoken = function(student,statusCode,res) {
-    console.log(student +"stu");
+    // console.log(student +"stu");
    const token = student.getjwttoken();
-   console.log(token+"stutoken");
-   console.log(process.env.COOKIE_EXPIRE);
+//    console.log(token+"stutoken");
+//    console.log(process.env.COOKIE_EXPIRE);
 
    const options = {
-       expires: new Date(Date.now() +Number (process.env.COOKIE_EXPIRE*1000 * 60 * 60 * 24)),
+    //    expires: new Date(Date.now() +Number (process.env.COOKIE_EXPIRE*1000 * 60 * 60 * 24)),
        httpOnly: true,
        secure:true,
  
    }    
-   console.log(options.expires);
+//    console.log(options.expires);
    res.status(statusCode)
    .cookie("token",token,options)
    .json({Succes:true,token,id:student._id})

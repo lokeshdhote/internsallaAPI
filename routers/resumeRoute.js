@@ -26,7 +26,13 @@ const {
     editaccomplishments,
     addresponsibilities,
     deleteresponsibilities,
-    editresponsibilities
+    editresponsibilities,
+    addlink,
+    dellink,
+    editlink
+
+
+
    
 } = require("../controllers/resumecontroller");
 const {isAuthenticated} = require("../middlewares/auth")
@@ -57,6 +63,12 @@ Router.post('/delproject/:id',isAuthenticated,deleteprojects);
 Router.post('/addskill',isAuthenticated,addskills );
 Router.post('/delskill/:id',isAuthenticated,deleteskills);
 Router.post('/editskill/:id',isAuthenticated,editskills);
+
+//link
+
+Router.post('/addlink',isAuthenticated,addlink );
+// Router.post('/dellink/:id',isAuthenticated,dellink);
+Router.post('/editlink/:id',isAuthenticated,editlink);
 
 //job
 

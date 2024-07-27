@@ -2,7 +2,7 @@ require("dotenv").config({path:"./.env"})
 const express = require('express');
 const app = express();
 
-app.use(express.json())
+app.use(express.json());
 app.use(express.urlencoded({extended:false}))
 const session = require("express-session");
 const cookieparser = require("cookie-parser");
