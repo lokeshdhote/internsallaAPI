@@ -12,7 +12,8 @@ const {home,
     studentupdate,
     studentavtar,
     studentapplyjobs,
-    studentapplyinternship
+    studentapplyinternship,
+    viewInternship
 
 } = require("../controllers/studentcontroller");
 const {isAuthenticated} = require("../middlewares/auth")
@@ -24,6 +25,11 @@ Router.post("/student/signup",studentsignup)
 
 //student signin
 Router.post("/student/signin",studentsignin)
+
+
+//  student  internship 
+
+Router.get("/student/allinternship",viewInternship)
 
 //student signout
 Router.get("/student/signout",isAuthenticated,studentsignout)

@@ -39,6 +39,12 @@ const Studentschema = new mongoose.Schema({
 
 
       },
+      internships:[
+        {type:mongoose.Schema.Types.ObjectId,ref:'Internship'}
+     ],
+     jobs:[
+        {type:mongoose.Schema.Types.ObjectId,ref:'Job'},
+     ],
       password:{
         type: String,
         select:false,
@@ -72,7 +78,7 @@ city:{
       resetPasswordToken:{
         type: String,
          default:"0"
-      }
+      },
 },{timestamps:true})
 
 Studentschema.pre("save",function(){

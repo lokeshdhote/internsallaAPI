@@ -170,3 +170,12 @@ exports.studentsignout = catchAsyncError(async (req, res,next) => {
         console.log(  res.clearCookie("token"));
         res.json({ message: 'SignOut successfully' });
 })
+
+exports.viewInternship= catchAsyncError(async (req, res,next) => {
+        const internship = await  internshipModel.find()
+        
+
+        
+      
+        res.status(200).json(internship )
+})

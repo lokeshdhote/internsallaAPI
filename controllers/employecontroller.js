@@ -126,6 +126,7 @@ exports.employeesignout = catchAsyncError(async (req, res,next) => {
 
 //internship
 exports.createInternship = catchAsyncError(async (req, res) => {
+        console.log(req.body);
         const employee = await EmployeeModel.findById(req.id).exec()
         const internship = await new internshipModel(req.body).save();
         internship.employee = employee._id;

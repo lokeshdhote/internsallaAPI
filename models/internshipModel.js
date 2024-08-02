@@ -9,6 +9,10 @@ const internshipSchema = new mongoose.Schema({
   type:mongoose.Schema.Types.ObjectId,
   ref:"Employee"
  },
+ city:{
+    type:String,
+    required: [true, "city is required"],
+          },
  profile:String,
  skill:String,
  internshiptype:{
@@ -34,7 +38,10 @@ stipend:{
     },
     amount:Number,
 },
-perks:String,
+perks:[{
+    type:String
+}]
+,
 preferences:String,
 
 assesments:String,

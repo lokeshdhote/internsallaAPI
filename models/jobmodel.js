@@ -29,7 +29,10 @@ const jobSchema = new mongoose.Schema({
  },
  openings:Number,
  responsibility:String,
-
+ city:{
+   type:String,
+   required: [true, "city is required"],
+         },
 salary:{
     from:{
         type:String,
@@ -38,7 +41,9 @@ salary:{
         type:String,
     },
 },
-perks:String,
+perks:[{
+   type:String
+}],
 description:String,
 preferences:String,
 assesments:String,
